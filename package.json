@@ -1,0 +1,8 @@
+{
+  "name": "cinema",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:mopsiq/cinema.git",
+  "author": "mopsiq <neenset25@gmail.com>",
+  "license": "MIT"
+}
