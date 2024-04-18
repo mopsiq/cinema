@@ -18,6 +18,8 @@ import { Route as rootRoute } from './routes/__root'
 
 const HallLazyImport = createFileRoute('/hall')()
 const IndexLazyImport = createFileRoute('/')()
+const FilmIndexLazyImport = createFileRoute('/film/')()
+const FilmTitleLazyImport = createFileRoute('/film/$title')()
 
 // Create/Update Routes
 
@@ -31,6 +33,16 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const FilmIndexLazyRoute = FilmIndexLazyImport.update({
+  path: '/film/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/film.index.lazy').then((d) => d.Route))
+
+const FilmTitleLazyRoute = FilmTitleLazyImport.update({
+  path: '/film/$title',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/film.$title.lazy').then((d) => d.Route))
+
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
@@ -43,11 +55,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof HallLazyImport
       parentRoute: typeof rootRoute
     }
+    '/film/$title': {
+      preLoaderRoute: typeof FilmTitleLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/film/': {
+      preLoaderRoute: typeof FilmIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
   }
 }
 
 // Create and export the route tree
 
-export const routeTree = rootRoute.addChildren([IndexLazyRoute, HallLazyRoute])
+export const routeTree = rootRoute.addChildren([
+  IndexLazyRoute,
+  HallLazyRoute,
+  FilmTitleLazyRoute,
+  FilmIndexLazyRoute,
+])
 
 /* prettier-ignore-end */
