@@ -1,4 +1,4 @@
-import { Tabs } from "../../components/common/Tabs/Tabs";
+import { Tabs } from "@frontend/components/common/Tabs/Tabs";
 
 export const Main = () => {
   return (
