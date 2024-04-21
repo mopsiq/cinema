@@ -18,7 +18,9 @@ import { Route as rootRoute } from './routes/__root'
 
 const HallLazyImport = createFileRoute('/hall')()
 const IndexLazyImport = createFileRoute('/')()
+const GenreIndexLazyImport = createFileRoute('/genre/')()
 const FilmIndexLazyImport = createFileRoute('/film/')()
+const GenreTypeLazyImport = createFileRoute('/genre/$type')()
 const FilmTitleLazyImport = createFileRoute('/film/$title')()
 
 // Create/Update Routes
@@ -33,10 +35,20 @@ const IndexLazyRoute = IndexLazyImport.update({
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/index.lazy').then((d) => d.Route))
 
+const GenreIndexLazyRoute = GenreIndexLazyImport.update({
+  path: '/genre/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/genre.index.lazy').then((d) => d.Route))
+
 const FilmIndexLazyRoute = FilmIndexLazyImport.update({
   path: '/film/',
   getParentRoute: () => rootRoute,
 } as any).lazy(() => import('./routes/film.index.lazy').then((d) => d.Route))
+
+const GenreTypeLazyRoute = GenreTypeLazyImport.update({
+  path: '/genre/$type',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/genre.$type.lazy').then((d) => d.Route))
 
 const FilmTitleLazyRoute = FilmTitleLazyImport.update({
   path: '/film/$title',
@@ -59,8 +71,16 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof FilmTitleLazyImport
       parentRoute: typeof rootRoute
     }
+    '/genre/$type': {
+      preLoaderRoute: typeof GenreTypeLazyImport
+      parentRoute: typeof rootRoute
+    }
     '/film/': {
       preLoaderRoute: typeof FilmIndexLazyImport
+      parentRoute: typeof rootRoute
+    }
+    '/genre/': {
+      preLoaderRoute: typeof GenreIndexLazyImport
       parentRoute: typeof rootRoute
     }
   }
@@ -72,7 +92,9 @@ export const routeTree = rootRoute.addChildren([
   IndexLazyRoute,
   HallLazyRoute,
   FilmTitleLazyRoute,
+  GenreTypeLazyRoute,
   FilmIndexLazyRoute,
+  GenreIndexLazyRoute,
 ])
 
 /* prettier-ignore-end */
